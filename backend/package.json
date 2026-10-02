@@ -1,0 +1,26 @@
+{
+  "name": "dataflow-backend-local",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend LOCAL de DataFlow sobre Floci (emulador AWS) + PostgreSQL. Aprovisionamiento idempotente con provision.mjs.",
+  "scripts": {
+    "up": "docker compose up -d",
+    "provision": "node provision.mjs",
+    "start": "docker compose up -d && node provision.mjs",
+    "down": "docker compose down -v",
+    "logs": "docker compose logs -f",
+    "seed": "docker compose exec -T postgres psql -U dataflow -d dataflow -f /docker-entrypoint-initdb.d/02_seed.sql",
+    "test": "node --test \"lambdas/common/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "@aws-sdk/client-api-gateway": "3.670.0",
+    "@aws-sdk/client-cognito-identity-provider": "3.670.0",
+    "@aws-sdk/client-iam": "3.670.0",
+    "@aws-sdk/client-lambda": "3.670.0",
+    "@aws-sdk/client-s3": "3.670.0",
+    "@aws-sdk/s3-request-presigner": "3.670.0",
+    "adm-zip": "0.5.16",
+    "pg": "8.13.1"
+  }
+}

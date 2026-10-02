@@ -1,0 +1,45 @@
+services:
+  floci:
+    image: floci/floci:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=cognito-idp,apigateway,lambda,s3,iam,sts
+      - LAMBDA_DOCKER_NETWORK=dataflow-net
+      - DEBUG=1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - dataflow-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=dataflow
+      - POSTGRES_USER=dataflow
+      - POSTGRES_PASSWORD=dataflow
+    volumes:
+      - "./db/init:/docker-entrypoint-initdb.d:ro"
+      - "dataflow-pgdata:/var/lib/postgresql/data"
+    networks:
+      - dataflow-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dataflow -d dataflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+networks:
+  dataflow-net:
+    name: dataflow-net      # <- IMPRESCINDIBLE: evita el prefijo <project>_ de Compose
+    driver: bridge
+
+volumes:
+  dataflow-pgdata:
