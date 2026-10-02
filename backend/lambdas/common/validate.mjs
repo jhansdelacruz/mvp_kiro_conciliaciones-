@@ -52,8 +52,9 @@ export function validateClientForm(body) {
 
   if (!isNonEmptyString(b.s3Prefix) || b.s3Prefix.length > 200)
     errors.s3Prefix = 's3Prefix es obligatorio (1..200)';
-  if (!isInteger(b.urlExpiration) || b.urlExpiration < 60 || b.urlExpiration > 604800)
-    errors.urlExpiration = 'urlExpiration debe ser un entero entre 60 y 604800';
+  // Máximo 5 días (432000 s). Las URLs prefirmadas no pueden exceder este límite.
+  if (!isInteger(b.urlExpiration) || b.urlExpiration < 60 || b.urlExpiration > 432000)
+    errors.urlExpiration = 'urlExpiration debe ser un entero entre 60 y 432000 (máx. 5 días)';
 
   if (Object.keys(errors).length > 0) {
     return { message: 'Datos del cliente inválidos', errors };

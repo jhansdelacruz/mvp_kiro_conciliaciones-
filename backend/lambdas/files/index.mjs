@@ -17,6 +17,12 @@ const s3 = new S3Client({
 const INPUT_BUCKET = process.env.INPUT_BUCKET || 'dataflow-input-local';
 const OUTPUT_BUCKET = process.env.OUTPUT_BUCKET || 'dataflow-output-local';
 
+// Tope de validez de URLs prefirmadas: 5 días (432000 s). Nunca emitimos una URL
+// con expiración mayor, aunque el valor almacenado del cliente lo excediera.
+const MAX_EXPIRES_IN = 432000;
+const clampExpires = (seconds) =>
+  Math.min(Math.max(Number(seconds) || 0, 60), MAX_EXPIRES_IN);
+
 export async function handler(event) {
   if (event?.httpMethod === 'OPTIONS') return json(200, {});
 
@@ -40,7 +46,7 @@ export async function handler(event) {
       if (rows.length === 0) return json(404, { message: 'Cliente no encontrado' });
 
       const s3Prefix = rows[0].s3_prefix;
-      const expiresIn = Number(rows[0].url_expiration);
+      const expiresIn = clampExpires(rows[0].url_expiration);
       const processId = 'proc-' + randomUUID();
       const key = `${s3Prefix}${processId}/${body.fileName}`;
 
@@ -80,7 +86,7 @@ export async function handler(event) {
       const url = await getSignedUrl(
         s3,
         new GetObjectCommand({ Bucket: OUTPUT_BUCKET, Key: rows[0].output_s3_key }),
-        { expiresIn: Number(rows[0].url_expiration) }
+        { expiresIn: clampExpires(rows[0].url_expiration) }
       );
       return json(200, { url });
     }
