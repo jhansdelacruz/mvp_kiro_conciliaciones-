@@ -1,0 +1,192 @@
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a routerLink="/admin/clients" class="breadcrumb__back">← Volver</a>
+  <h1 class="breadcrumb__title">{{ title() }}</h1>
+</div>
+
+<!-- Form card -->
+<div class="form-card">
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <mat-tab-group animationDuration="200ms" class="form-tabs">
+
+      <!-- Tab 1: Datos generales -->
+      <mat-tab label="Datos generales">
+        <div class="tab-content">
+          <div class="form-grid">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre completo</mat-label>
+              <input
+                matInput
+                formControlName="name"
+                placeholder="Ej: Juan García"
+                autocomplete="name"
+              />
+              <mat-error *ngIf="form.get('name')?.hasError('required')">
+                El nombre es requerido
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Empresa</mat-label>
+              <input
+                matInput
+                formControlName="company"
+                placeholder="Ej: ACME Distribuciones S.A."
+                autocomplete="organization"
+              />
+              <mat-error *ngIf="form.get('company')?.hasError('required')">
+                La empresa es requerida
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Correo electrónico</mat-label>
+              <input
+                matInput
+                formControlName="email"
+                type="email"
+                placeholder="correo@empresa.com"
+                autocomplete="email"
+              />
+              <mat-error *ngIf="form.get('email')?.hasError('required')">
+                El correo es requerido
+              </mat-error>
+              <mat-error *ngIf="form.get('email')?.hasError('email')">
+                Ingresa un correo válido
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="status">
+                <mat-option value="ACTIVE">Activo</mat-option>
+                <mat-option value="INACTIVE">Inactivo</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 2: Configuración -->
+      <mat-tab label="Configuración">
+        <div class="tab-content">
+
+          <!-- Delivery method section -->
+          <p class="section-label">Método de entrega de documentos procesados</p>
+
+          <div class="delivery-cards" role="radiogroup" aria-label="Método de entrega">
+            <!-- DASHBOARD card -->
+            <div
+              class="delivery-card"
+              [class.delivery-card--selected]="selectedDeliveryMethod() === 'DASHBOARD'"
+              (click)="setDeliveryMethod('DASHBOARD')"
+              role="radio"
+              [attr.aria-checked]="selectedDeliveryMethod() === 'DASHBOARD'"
+              tabindex="0"
+              (keydown.space)="setDeliveryMethod('DASHBOARD')"
+              (keydown.enter)="setDeliveryMethod('DASHBOARD')"
+            >
+              <div class="delivery-card__icon">🔗</div>
+              <div class="delivery-card__body">
+                <strong class="delivery-card__title">Por Dashboard (S3 URL)</strong>
+                <span class="delivery-card__subtitle">
+                  El resultado aparece en su dashboard como enlace S3 pre-firmado
+                </span>
+              </div>
+              <div
+                class="delivery-card__check"
+                [class.delivery-card__check--visible]="selectedDeliveryMethod() === 'DASHBOARD'"
+                aria-hidden="true"
+              >✓</div>
+            </div>
+
+            <!-- EMAIL card -->
+            <div
+              class="delivery-card"
+              [class.delivery-card--selected]="selectedDeliveryMethod() === 'EMAIL'"
+              (click)="setDeliveryMethod('EMAIL')"
+              role="radio"
+              [attr.aria-checked]="selectedDeliveryMethod() === 'EMAIL'"
+              tabindex="0"
+              (keydown.space)="setDeliveryMethod('EMAIL')"
+              (keydown.enter)="setDeliveryMethod('EMAIL')"
+            >
+              <div class="delivery-card__icon">📧</div>
+              <div class="delivery-card__body">
+                <strong class="delivery-card__title">Por correo electrónico</strong>
+                <span class="delivery-card__subtitle">
+                  El archivo procesado se envía via Amazon SES
+                </span>
+              </div>
+              <div
+                class="delivery-card__check"
+                [class.delivery-card__check--visible]="selectedDeliveryMethod() === 'EMAIL'"
+                aria-hidden="true"
+              >✓</div>
+            </div>
+          </div>
+
+          <!-- Hidden form control for deliveryMethod (kept in sync via setDeliveryMethod) -->
+          <input type="hidden" formControlName="deliveryMethod" />
+
+          <!-- Conditional: notification email -->
+          <div *ngIf="selectedDeliveryMethod() === 'EMAIL'" class="conditional-field">
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>Correo de notificación</mat-label>
+              <input
+                matInput
+                formControlName="notificationEmail"
+                type="email"
+                placeholder="notificaciones@empresa.com"
+                autocomplete="email"
+              />
+              <mat-hint>Dirección que recibirá el documento procesado</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="config-grid">
+            <!-- URL expiration -->
+            <mat-form-field appearance="outline">
+              <mat-label>Expiración de URL</mat-label>
+              <mat-select formControlName="urlExpiration">
+                <mat-option [value]="3600">1 hora</mat-option>
+                <mat-option [value]="86400">24 horas</mat-option>
+                <mat-option [value]="259200">3 días</mat-option>
+                <mat-option [value]="432000">5 días</mat-option>
+              </mat-select>
+              <mat-hint>Tiempo de validez del enlace S3 pre-firmado (máx. 5 días)</mat-hint>
+            </mat-form-field>
+
+            <!-- S3 prefix -->
+            <mat-form-field appearance="outline">
+              <mat-label>Prefijo S3</mat-label>
+              <input
+                matInput
+                formControlName="s3Prefix"
+                placeholder="clients/nombre-empresa/"
+              />
+              <mat-hint>Auto-generado desde el nombre de empresa (editable)</mat-hint>
+            </mat-form-field>
+          </div>
+
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+
+    <!-- Form actions -->
+    <div class="form-actions">
+      <button mat-button type="button" (click)="cancel()">Cancelar</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="form.invalid"
+      >
+        💾 Guardar cambios
+      </button>
+    </div>
+  </form>
+</div>

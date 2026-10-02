@@ -1,0 +1,134 @@
+<div class="dashboard">
+  <h1 class="dashboard__title">Panel de Control</h1>
+
+  <!-- Summary cards -->
+  <div class="summary-cards" role="region" aria-label="Resumen de procesos">
+    <div class="summary-card summary-card--blue">
+      <div class="summary-card__value">{{ totalCount() }}</div>
+      <div class="summary-card__label">Total procesos</div>
+    </div>
+    <div class="summary-card summary-card--green">
+      <div class="summary-card__value">{{ completedCount() }}</div>
+      <div class="summary-card__label">Completados</div>
+    </div>
+    <div class="summary-card summary-card--yellow">
+      <div class="summary-card__value">{{ processingCount() }}</div>
+      <div class="summary-card__label">En proceso</div>
+    </div>
+    <div class="summary-card summary-card--red">
+      <div class="summary-card__value">{{ errorCount() }}</div>
+      <div class="summary-card__label">Con errores</div>
+    </div>
+  </div>
+
+  <!-- Filter chips -->
+  <div class="filter-section">
+    <mat-chip-listbox aria-label="Filtrar por estado">
+      <mat-chip-option [selected]="filter() === 'ALL'" (click)="setFilter('ALL')">
+        Todos ({{ totalCount() }})
+      </mat-chip-option>
+      <mat-chip-option [selected]="filter() === 'COMPLETED'" (click)="setFilter('COMPLETED')">
+        Completados ({{ completedCount() }})
+      </mat-chip-option>
+      <mat-chip-option [selected]="filter() === 'PROCESSING'" (click)="setFilter('PROCESSING')">
+        En proceso
+      </mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading()" class="loading-container" aria-label="Cargando...">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+
+  <!-- Table section (kept in DOM for @ViewChild paginator) -->
+  <div [style.display]="isLoading() ? 'none' : 'block'" class="table-container">
+    <table mat-table [dataSource]="dataSource" aria-label="Historial de procesos">
+
+      <!-- File Name Column -->
+      <ng-container matColumnDef="fileName">
+        <th mat-header-cell *matHeaderCellDef>Archivo</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="file-name">{{ row.fileName }}</span>
+        </td>
+      </ng-container>
+
+      <!-- File Type Column -->
+      <ng-container matColumnDef="fileType">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let row">
+          <span [ngClass]="getFileTypeClass(row.fileType)">{{ row.fileType }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Created At Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.createdAt | date:'dd/MM/yyyy HH:mm' }}
+        </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let row">
+          <span [ngClass]="getStatusClass(row.status)">
+            {{ getStatusLabel(row.status) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Result Column -->
+      <ng-container matColumnDef="result">
+        <th mat-header-cell *matHeaderCellDef>Resultado</th>
+        <td mat-cell *matCellDef="let row">
+          <ng-container *ngIf="row.status === 'COMPLETED' && row.downloadUrl">
+            <button
+              mat-stroked-button
+              color="primary"
+              class="action-btn"
+              (click)="openDownload(row.downloadUrl)"
+              [attr.aria-label]="'Descargar ' + row.fileName"
+            >
+              Descargar
+            </button>
+          </ng-container>
+          <ng-container *ngIf="row.status === 'ERROR'">
+            <button
+              mat-stroked-button
+              color="warn"
+              class="action-btn"
+              (click)="retryProcess(row.processId)"
+              [attr.aria-label]="'Reintentar ' + row.fileName"
+            >
+              Reintentar
+            </button>
+          </ng-container>
+          <ng-container *ngIf="row.status !== 'COMPLETED' && row.status !== 'ERROR'">
+            <span class="no-action">—</span>
+          </ng-container>
+          <ng-container *ngIf="row.status === 'COMPLETED' && !row.downloadUrl">
+            <span class="no-action">—</span>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Empty state row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-state" [attr.colspan]="displayedColumns.length">
+          No hay procesos para mostrar.
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25]"
+      aria-label="Paginación de procesos"
+    ></mat-paginator>
+  </div>
+</div>

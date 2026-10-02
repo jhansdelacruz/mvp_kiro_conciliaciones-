@@ -1,0 +1,175 @@
+@use '../../../../styles/variables' as *;
+
+.file-upload {
+  max-width: 800px;
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px;
+  }
+
+  &__subtitle {
+    color: #64748b;
+    margin: 0 0 24px;
+    font-size: 0.9rem;
+  }
+
+  &__zone {
+    margin-bottom: 24px;
+  }
+
+  &__actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+// ── File list ─────────────────────────────────────────────────────────────────
+
+.file-list {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+
+  &__header {
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  &__count {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #f8fafc;
+  }
+
+  &__info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 0.9rem;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__size {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  &__status {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  &__progress {
+    width: 140px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  &__percent {
+    font-size: 0.78rem;
+    color: #64748b;
+    width: 32px;
+    text-align: right;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__remove {
+    flex-shrink: 0;
+    color: #94a3b8 !important;
+
+    &:hover:not(:disabled) {
+      color: $error !important;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+    }
+  }
+}
+
+// ── Process button ────────────────────────────────────────────────────────────
+
+.process-btn {
+  min-width: 200px;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+// ── Success section ───────────────────────────────────────────────────────────
+
+.success-section {
+  margin-top: 32px;
+  background: white;
+  border-radius: 12px;
+  padding: 40px 32px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-top: 4px solid $success;
+
+  &__icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px;
+  }
+
+  &__message {
+    color: #64748b;
+    margin: 0 0 24px;
+    font-size: 0.9rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,36 @@
+<div
+  class="drop-zone"
+  [class.drag-over]="isDragOver()"
+  (click)="fileInput.click()"
+  role="button"
+  tabindex="0"
+  aria-label="Zona de carga de archivos"
+  (keydown.enter)="fileInput.click()"
+  (keydown.space)="fileInput.click()"
+>
+  <div class="drop-zone__icon">☁️</div>
+  <div class="drop-zone__text">
+    <strong>Arrastra archivos aquí o haz clic para seleccionar</strong>
+    <span>Máximo {{ maxSizeMB }}MB por archivo</span>
+  </div>
+  <div class="drop-zone__types">
+    <span *ngFor="let type of acceptedTypes" [ngClass]="getTypeClass(type)">{{ type }}</span>
+  </div>
+  <input
+    #fileInput
+    type="file"
+    [accept]="getAcceptString()"
+    multiple
+    class="drop-zone__input"
+    (change)="onFileInputChange($event)"
+    (click)="$event.stopPropagation()"
+    aria-hidden="true"
+    tabindex="-1"
+  />
+</div>
+
+<div *ngIf="rejectedFiles().length > 0" class="drop-zone__errors" role="alert">
+  <div *ngFor="let err of rejectedFiles()" class="drop-zone__error-item">
+    ⚠️ {{ err }}
+  </div>
+</div>

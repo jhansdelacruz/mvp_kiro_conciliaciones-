@@ -1,0 +1,166 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Gestión de Clientes</h1>
+    <p class="page-subtitle">Administra todos los clientes registrados en la plataforma</p>
+  </div>
+  <button mat-raised-button color="primary" (click)="navigateToNew()">
+    + Nuevo Cliente
+  </button>
+</div>
+
+<!-- Summary cards -->
+<div class="summary-cards" role="region" aria-label="Resumen de clientes">
+  <div class="summary-card">
+    <div class="summary-card__value">{{ totalClients() }}</div>
+    <div class="summary-card__label">Total clientes</div>
+  </div>
+  <div class="summary-card summary-card--green">
+    <div class="summary-card__value">{{ activeClients() }}</div>
+    <div class="summary-card__label">Activos</div>
+  </div>
+  <div class="summary-card summary-card--blue">
+    <div class="summary-card__value">{{ totalProcesses() }}</div>
+    <div class="summary-card__label">Archivos procesados</div>
+  </div>
+</div>
+
+<!-- Search bar -->
+<div class="search-bar">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Buscar por nombre o empresa</mat-label>
+    <input
+      matInput
+      (input)="onSearch($event)"
+      placeholder="Escribe para filtrar..."
+      aria-label="Buscar clientes"
+    />
+  </mat-form-field>
+</div>
+
+<!-- Table -->
+<ng-container *ngIf="!isLoading(); else loadingTpl">
+  <div class="table-container">
+    <table
+      mat-table
+      [dataSource]="filteredClients()"
+      class="clients-table"
+      aria-label="Lista de clientes"
+    >
+      <!-- Avatar column -->
+      <ng-container matColumnDef="avatar">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let client">
+          <div
+            class="avatar"
+            [style.background-color]="getAvatarColor(client.name)"
+            [attr.aria-label]="'Iniciales de ' + client.name"
+          >
+            {{ getInitials(client.name) }}
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Name + Company column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let client">
+          <div class="client-name-cell">
+            <strong>{{ client.name }}</strong>
+            <span class="client-company">{{ client.company }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Email column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Correo electrónico</th>
+        <td mat-cell *matCellDef="let client">{{ client.email }}</td>
+      </ng-container>
+
+      <!-- Delivery method column -->
+      <ng-container matColumnDef="deliveryMethod">
+        <th mat-header-cell *matHeaderCellDef>Método de entrega</th>
+        <td mat-cell *matCellDef="let client">
+          <span
+            class="badge"
+            [class.badge--dashboard]="client.deliveryMethod === 'DASHBOARD'"
+            [class.badge--email]="client.deliveryMethod === 'EMAIL'"
+          >
+            {{ client.deliveryMethod === 'DASHBOARD' ? '🔗 Dashboard' : '📧 Correo' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Status column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let client">
+          <span
+            class="badge"
+            [class.badge--active]="client.status === 'ACTIVE'"
+            [class.badge--inactive]="client.status === 'INACTIVE'"
+          >
+            {{ client.status === 'ACTIVE' ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Total processes column -->
+      <ng-container matColumnDef="totalProcesses">
+        <th mat-header-cell *matHeaderCellDef>Procesos</th>
+        <td mat-cell *matCellDef="let client">{{ client.totalProcesses ?? 0 }}</td>
+      </ng-container>
+
+      <!-- Actions column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let client">
+          <div class="actions-cell">
+            <button
+              mat-button
+              color="primary"
+              (click)="editClient(client.clientId)"
+              [attr.aria-label]="'Editar cliente ' + client.name"
+            >
+              ✏️ Editar
+            </button>
+            <button
+              mat-button
+              color="warn"
+              *ngIf="client.status === 'ACTIVE'"
+              (click)="deactivateClient(client)"
+              [attr.aria-label]="'Desactivar cliente ' + client.name"
+            >
+              Desactivar
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Empty state row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-state-cell" [attr.colspan]="displayedColumns.length">
+          <div class="empty-state">
+            <span class="empty-state__icon" aria-hidden="true">🔍</span>
+            <p class="empty-state__text">No se encontraron clientes con ese criterio de búsqueda.</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Fallback empty state when filteredClients is empty and table hasn't rendered *matNoDataRow -->
+    <div class="empty-state" *ngIf="filteredClients().length === 0 && allClients().length > 0">
+      <span class="empty-state__icon" aria-hidden="true">🔍</span>
+      <p class="empty-state__text">No se encontraron clientes con ese criterio de búsqueda.</p>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loadingTpl>
+  <div class="loading-state" role="status" aria-label="Cargando clientes">
+    Cargando clientes...
+  </div>
+</ng-template>

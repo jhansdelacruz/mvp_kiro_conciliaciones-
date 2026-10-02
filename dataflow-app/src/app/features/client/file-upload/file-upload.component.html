@@ -1,0 +1,102 @@
+<div class="file-upload">
+  <h1 class="file-upload__title">Cargar Archivos</h1>
+  <p class="file-upload__subtitle">
+    Sube tus archivos CSV, JSON o XLSX para procesarlos. Máximo 5 archivos por envío.
+  </p>
+
+  <!-- Drop zone -->
+  <div class="file-upload__zone">
+    <app-file-drop-zone
+      [acceptedTypes]="['.csv', '.json', '.xlsx']"
+      [maxSizeMB]="50"
+      (filesSelected)="onFilesSelected($event)"
+    ></app-file-drop-zone>
+  </div>
+
+  <!-- Pending files list -->
+  <div *ngIf="pendingFiles().length > 0" class="file-list" role="list" aria-label="Archivos seleccionados">
+    <div class="file-list__header">
+      <span class="file-list__count">{{ pendingFiles().length }}/5 archivos</span>
+    </div>
+
+    <div
+      *ngFor="let item of pendingFiles(); let i = index"
+      class="file-item"
+      role="listitem"
+    >
+      <div class="file-item__info">
+        <span [ngClass]="['badge', getFileTypeClass(item.file.name)]">
+          {{ item.file.name.split('.').pop()?.toUpperCase() }}
+        </span>
+        <span class="file-item__name">{{ item.file.name }}</span>
+        <span class="file-item__size">{{ formatSize(item.file.size) }}</span>
+        <span class="file-item__status" [attr.aria-label]="'Estado: ' + getStatusLabel(item.status())">
+          {{ getStatusIcon(item.status()) }} {{ getStatusLabel(item.status()) }}
+        </span>
+      </div>
+
+      <div class="file-item__progress">
+        <mat-progress-bar
+          mode="determinate"
+          [value]="item.progress()"
+          [attr.aria-label]="'Progreso de ' + item.file.name"
+        ></mat-progress-bar>
+        <span class="file-item__percent">{{ item.progress() }}%</span>
+      </div>
+
+      <button
+        mat-icon-button
+        class="file-item__remove"
+        (click)="removeFile(i)"
+        [disabled]="item.status() === 'uploading'"
+        [attr.aria-label]="'Eliminar ' + item.file.name"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Action button -->
+  <div *ngIf="pendingFiles().length > 0 && !showSuccess()" class="file-upload__actions">
+    <button
+      mat-raised-button
+      color="primary"
+      class="process-btn"
+      (click)="startProcessing()"
+      [disabled]="pendingFiles().length === 0 || isUploading()"
+      aria-label="Iniciar procesamiento de archivos"
+    >
+      <mat-icon aria-hidden="true">cloud_upload</mat-icon>
+      {{ isUploading() ? 'Subiendo...' : 'Subir y procesar' }}
+    </button>
+  </div>
+
+  <!-- Success state -->
+  <div *ngIf="showSuccess()" class="success-section" role="status" aria-live="polite">
+    <div class="success-section__icon" aria-hidden="true">📨</div>
+    <h2 class="success-section__title">¡Archivos subidos y en cola!</h2>
+    <p class="success-section__message">
+      Tus archivos se están procesando de forma asíncrona en segundo plano.
+      No necesitas esperar: cuando el procesamiento termine, el resultado
+      aparecerá en tu Dashboard.
+    </p>
+    <div class="success-section__actions">
+      <a
+        mat-raised-button
+        color="primary"
+        routerLink="/client/dashboard"
+        aria-label="Ver resultados en el dashboard"
+      >
+        <mat-icon aria-hidden="true">dashboard</mat-icon>
+        Ver en Dashboard
+      </a>
+      <button
+        mat-stroked-button
+        (click)="resetUpload()"
+        aria-label="Cargar más archivos"
+      >
+        Cargar más archivos
+      </button>
+    </div>
+  </div>
+</div>

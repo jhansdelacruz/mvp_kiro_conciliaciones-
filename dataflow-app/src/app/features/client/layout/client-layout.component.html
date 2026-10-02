@@ -1,0 +1,52 @@
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__logo">🔷 DataFlow</div>
+
+    <nav class="sidebar__nav" aria-label="Navegación principal">
+      <a
+        class="sidebar__nav-item"
+        routerLink="/client/dashboard"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+      >
+        <span class="sidebar__nav-icon" aria-hidden="true">📊</span>
+        <span>Dashboard</span>
+      </a>
+      <a
+        class="sidebar__nav-item"
+        routerLink="/client/upload"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+      >
+        <span class="sidebar__nav-icon" aria-hidden="true">☁️</span>
+        <span>Cargar Archivos</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__user" title="{{ userName() }}">{{ userName() }}</div>
+      <button
+        mat-button
+        class="sidebar__logout"
+        (click)="logout()"
+        aria-label="Cerrar sesión"
+      >
+        Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main area -->
+  <div class="main">
+    <header class="topbar">
+      <span class="topbar__title">DataFlow</span>
+      <div class="topbar__user-badge" [attr.aria-label]="'Usuario: ' + userName()">
+        {{ userName() }}
+      </div>
+    </header>
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo">🔷 DataFlow</div>
+    <h2 class="title">Bienvenido</h2>
+    <p class="subtitle">Ingrese sus credenciales para continuar</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Correo electrónico</mat-label>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          placeholder="usuario@empresa.com"
+          autocomplete="email"
+        />
+        <mat-error *ngIf="form.get('email')?.hasError('required')">
+          El correo es requerido
+        </mat-error>
+        <mat-error *ngIf="form.get('email')?.hasError('email')">
+          Ingrese un correo válido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input
+          matInput
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        <mat-error *ngIf="form.get('password')?.hasError('required')">
+          La contraseña es requerida
+        </mat-error>
+        <mat-error *ngIf="form.get('password')?.hasError('minlength')">
+          Mínimo 6 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <div class="error-message" *ngIf="errorMessage()">
+        ⚠️ {{ errorMessage() }}
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="submit-btn"
+        [disabled]="isLoading()"
+      >
+        <mat-spinner *ngIf="isLoading()" diameter="20" class="spinner"></mat-spinner>
+        <span>{{ isLoading() ? 'Iniciando sesión...' : 'Iniciar Sesión' }}</span>
+      </button>
+    </form>
+
+    <div class="footer-note">🔒 Autenticado con AWS Cognito</div>
+  </div>
+</div>

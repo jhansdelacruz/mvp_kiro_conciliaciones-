@@ -1,0 +1,64 @@
+@use 'styles/variables' as *;
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: $font-family;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+// Badge base class
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+// Status badge modifiers
+.badge-success {
+  background-color: rgba(#10b981, 0.15);
+  color: #059669;
+}
+
+.badge-warning {
+  background-color: rgba(#f59e0b, 0.15);
+  color: #d97706;
+}
+
+.badge-error {
+  background-color: rgba(#ef4444, 0.15);
+  color: #dc2626;
+}
+
+.badge-info {
+  background-color: rgba(#3b82f6, 0.15);
+  color: #2563eb;
+}
+
+// File type badge classes
+.ft-csv {
+  background-color: rgba(#10b981, 0.15);
+  color: #059669;
+}
+
+.ft-json {
+  background-color: rgba(#f59e0b, 0.15);
+  color: #d97706;
+}
+
+.ft-xlsx {
+  background-color: rgba(#3b82f6, 0.15);
+  color: #2563eb;
+}

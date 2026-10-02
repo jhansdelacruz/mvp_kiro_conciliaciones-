@@ -1,0 +1,60 @@
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__logo">⚙️ DataFlow Admin</div>
+
+    <nav class="sidebar__nav" aria-label="Navegación de administrador">
+      <a
+        class="sidebar__nav-item"
+        routerLink="/admin/clients"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+      >
+        <span class="sidebar__nav-icon" aria-hidden="true">👥</span>
+        <span>Clientes</span>
+      </a>
+
+      <div class="sidebar__nav-item sidebar__nav-item--disabled" aria-disabled="true">
+        <span class="sidebar__nav-icon" aria-hidden="true">📊</span>
+        <span>Reportes globales</span>
+        <span class="sidebar__coming-soon">Pronto</span>
+      </div>
+
+      <hr class="sidebar__divider" />
+
+      <div class="sidebar__nav-item sidebar__nav-item--disabled" aria-disabled="true">
+        <span class="sidebar__nav-icon" aria-hidden="true">⚙️</span>
+        <span>Configuración</span>
+        <span class="sidebar__coming-soon">Pronto</span>
+      </div>
+
+      <button
+        mat-button
+        class="sidebar__nav-item sidebar__nav-logout"
+        (click)="logout()"
+        aria-label="Cerrar sesión y salir"
+      >
+        <span class="sidebar__nav-icon" aria-hidden="true">🚪</span>
+        <span>Salir</span>
+      </button>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__user" [title]="userName()">{{ userName() }}</div>
+      <div class="sidebar__role-badge">Administrador</div>
+    </div>
+  </aside>
+
+  <!-- Main area -->
+  <div class="main">
+    <header class="topbar">
+      <span class="topbar__title">DataFlow Admin</span>
+      <div class="topbar__user-badge" [attr.aria-label]="'Rol: Administrador'">
+        Administrador
+      </div>
+    </header>
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
