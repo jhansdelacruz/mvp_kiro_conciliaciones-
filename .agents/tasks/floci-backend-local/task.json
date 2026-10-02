@@ -1,0 +1,7 @@
+{
+  "task_id": "floci-backend-local",
+  "task_description": "Backend 100% local para la app Angular DataFlow usando Floci (emulador AWS en localhost:4566) + PostgreSQL 16, orquestado con Docker Compose y un provision.mjs idempotente (Cognito, S3, 4 Lambdas Node 20, API Gateway REST con autorizador Cognito que acepta el id token). Incluye la integracion de frontend acotada (authMode local, LocalAuthService) sin romper el modo mock por defecto. Fuente autoritativa: design.md (APPROVED).",
+  "status": "completed",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null
+}

@@ -1,0 +1,17 @@
+{
+  "verdict": "APPROVED",
+  "findings": [
+    {
+      "severity": "NIT",
+      "where": "backend/lambdas/clients/index.mjs:31 (GET /clients ORDER BY created_at ASC)",
+      "detail": "El listado de /clients se ordena por created_at ASC (001,004,002,003,005), distinto al orden de insercion de MOCK_CLIENTS (001..005). No es un requisito del diseno ni de los criterios de aceptacion (solo exigen count=5) y la vista admin ordena por su cuenta; no afecta contrato ni paridad.",
+      "fix": "Opcional: ORDER BY client_id ASC para reproducir el orden visual del mock si se desea paridad exacta de orden."
+    },
+    {
+      "severity": "NIT",
+      "where": "dataflow-app (working tree): auth.guard.ts, client.service.ts, client-form.component.ts, client.model.ts",
+      "detail": "El arbol de trabajo del repo anidado dataflow-app tiene 4 archivos modificados sin commitear que quedan FUERA de los 6 archivos permitidos. Son cambios PRE-EXISTENTES de trabajo admin anterior (commit 92794c5), no introducidos por esta tarea: el commit de la tarea (2feebf0) toca EXACTAMENTE los 6 archivos permitidos de FEAT-002. No bloqueante.",
+      "fix": "Ninguna accion requerida para esta tarea; esos cambios no pertenecen al alcance y no fueron tocados."
+    }
+  ]
+}
