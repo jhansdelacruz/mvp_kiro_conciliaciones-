@@ -1,0 +1,22 @@
+# Dependencias
+node_modules/
+
+# Build / salidas
+dist/
+.angular/
+*.tsbuildinfo
+
+# El frontend es su propio repositorio (remote aparte)
+dataflow-app/
+
+# Artefactos de workflows / IDE
+.agents/
+.kiro/
+
+# Salidas generadas por el aprovisionamiento local de Floci
+backend/.floci/outputs.json
+backend/lambdas/**/*.zip
+
+# Sistema
+.DS_Store
+*.log
