@@ -1,0 +1,13 @@
+<div class="trace-panel" *ngIf="entries.length">
+  <div class="trace-panel__header">
+    <span class="trace-panel__title">Traza de ejecución</span>
+    <span class="trace-panel__corr" *ngIf="correlationId">X-Correlation-Id: {{ correlationId }}</span>
+  </div>
+  <ol class="trace-panel__list">
+    <li class="trace-panel__item" *ngFor="let entry of entries">
+      <span class="trace-panel__step">{{ entry.step }}</span>
+      <span class="trace-panel__detail">{{ entry.detail }}</span>
+      <span class="trace-panel__time">{{ entry.timestamp | date: 'HH:mm:ss.SSS' }}</span>
+    </li>
+  </ol>
+</div>

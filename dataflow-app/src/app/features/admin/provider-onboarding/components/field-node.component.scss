@@ -1,0 +1,54 @@
+.field-node {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: #94a3b8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #0f172a;
+    outline-offset: 2px;
+  }
+
+  &--selected {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+  }
+
+  &--linked {
+    border-color: #10b981;
+    background: #f0fdf4;
+  }
+
+  &__label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  &__required {
+    color: #ef4444;
+    margin-left: 2px;
+  }
+
+  &__path {
+    font-size: 0.72rem;
+    color: #64748b;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    word-break: break-all;
+  }
+
+  &__sample {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    font-style: italic;
+  }
+}

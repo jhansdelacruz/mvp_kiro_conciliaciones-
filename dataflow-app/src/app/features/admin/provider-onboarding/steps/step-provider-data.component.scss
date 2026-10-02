@@ -1,0 +1,76 @@
+.step-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+
+.step-hint {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0 0 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 4px 16px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.form-fieldset {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 16px 0 0;
+
+  legend {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #334155;
+    padding: 0 6px;
+  }
+}
+
+.op-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.op-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.op-note {
+  font-size: 0.72rem;
+  color: #f59e0b;
+  font-style: italic;
+}
+
+.ref-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+
+  mat-form-field {
+    width: 160px;
+  }
+}
+
+.ref-pattern {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0;
+
+  code {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    color: #0f172a;
+  }
+}

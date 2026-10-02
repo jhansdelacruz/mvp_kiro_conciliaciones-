@@ -1,0 +1,82 @@
+<form [formGroup]="form" class="provider-form">
+  <h2 class="step-title">Datos del proveedor</h2>
+  <p class="step-hint">Describe el proveedor y el protocolo que habla. El identificador se genera automáticamente.</p>
+
+  <div class="form-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Identificador</mat-label>
+      <input matInput [value]="providerId" readonly aria-label="Identificador del proveedor" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre del proveedor</mat-label>
+      <input matInput formControlName="name" placeholder="p. ej. Banco Comercial" />
+      <mat-error>El nombre es obligatorio.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Rubro</mat-label>
+      <input matInput formControlName="rubro" placeholder="p. ej. Banca, Servicios, Telecom" />
+      <mat-error>El rubro es obligatorio.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Protocolo</mat-label>
+      <mat-select formControlName="protocol">
+        <mat-option *ngFor="let p of protocols" [value]="p">{{ p }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo de seguridad</mat-label>
+      <mat-select formControlName="securityType">
+        <mat-option *ngFor="let s of securityTypes" [value]="s">{{ s }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Monedas soportadas</mat-label>
+      <mat-select formControlName="currencies" multiple>
+        <mat-option *ngFor="let c of currencyOptions" [value]="c">{{ c }}</mat-option>
+      </mat-select>
+      <mat-error>Selecciona al menos una moneda.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Timeout (ms)</mat-label>
+      <input matInput type="number" formControlName="timeoutMs" min="1000" max="60000" />
+      <mat-error>Debe estar entre 1000 y 60000 ms.</mat-error>
+    </mat-form-field>
+  </div>
+
+  <fieldset class="form-fieldset">
+    <legend>Operaciones soportadas</legend>
+    <div class="op-list">
+      <mat-checkbox [checked]="true" [disabled]="true">Consulta de deuda (SRV-01)</mat-checkbox>
+      <mat-checkbox formControlName="opPago">Pago (SRV-02)</mat-checkbox>
+      <label class="op-meta">
+        <mat-checkbox formControlName="opEstado">Estado</mat-checkbox>
+        <span class="op-note">Sin mapeo en esta versión</span>
+      </label>
+      <label class="op-meta">
+        <mat-checkbox formControlName="opExtorno">Extorno</mat-checkbox>
+        <span class="op-note">Sin mapeo en esta versión</span>
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-fieldset">
+    <legend>Referencia del cliente (numérica, validada en el canal)</legend>
+    <div class="ref-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Longitud mínima</mat-label>
+        <input matInput type="number" formControlName="refMin" min="5" max="10" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Longitud máxima</mat-label>
+        <input matInput type="number" formControlName="refMax" min="5" max="10" />
+      </mat-form-field>
+      <p class="ref-pattern">Patrón derivado: <code>{{ derivedPattern }}</code></p>
+    </div>
+  </fieldset>
+</form>

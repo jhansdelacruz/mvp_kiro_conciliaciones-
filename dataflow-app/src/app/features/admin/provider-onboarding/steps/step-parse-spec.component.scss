@@ -1,0 +1,116 @@
+.step-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+
+.step-hint {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0 0 16px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.btn-primary {
+  background: #f59e0b;
+  color: #0f172a;
+}
+
+.spec-field {
+  width: 100%;
+
+  textarea {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.8rem;
+  }
+}
+
+.alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  margin-bottom: 12px;
+
+  &--error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+  }
+
+  &--warn {
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+  }
+}
+
+.review-panel {
+  margin-top: 8px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.review-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px;
+}
+
+.table-wrap {
+  overflow: auto;
+  max-height: 320px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.fields-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    background: #f1f5f9;
+    color: #475569;
+    font-weight: 600;
+  }
+
+  code {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    color: #0f172a;
+  }
+
+  .sample {
+    color: #64748b;
+  }
+}
+
+.confirm-box {
+  display: block;
+  margin-top: 16px;
+  font-weight: 600;
+}
+
+.confirm-hint {
+  font-size: 0.78rem;
+  color: #f59e0b;
+  margin: 4px 0 0 32px;
+}

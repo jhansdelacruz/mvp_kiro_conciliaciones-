@@ -22,6 +22,13 @@
   margin: 0;
 }
 
+// FIX-2: el botón "+ Nuevo proveedor" ámbar. La regla debe vivir aquí (no en el
+// SCSS del wizard) porque la encapsulación emulada aplica estilos por componente.
+.btn-accent {
+  color: #f59e0b;
+  border-color: #f59e0b;
+}
+
 // ── Summary cards ─────────────────────────────────────────────────────────────
 
 .summary-cards {

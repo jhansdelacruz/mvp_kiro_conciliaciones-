@@ -1,0 +1,128 @@
+<div class="test-step">
+  <h2 class="step-title">Probar y activar</h2>
+  <p class="step-hint">
+    Ejecuta una consulta de prueba con el mapeo definido. "Activar" se habilita solo si la prueba
+    devuelve obligaciones.
+  </p>
+
+  <div class="toggles">
+    <mat-slide-toggle [checked]="forceNoDebt()" (change)="forceNoDebt.set($event.checked)">
+      Simular consulta sin deuda (NO_DEBT)
+    </mat-slide-toggle>
+    <mat-slide-toggle
+      *ngIf="showPago"
+      [checked]="forcePaymentError()"
+      (change)="forcePaymentError.set($event.checked)"
+    >
+      Simular pago rechazado (moneda no soportada)
+    </mat-slide-toggle>
+  </div>
+
+  <div class="actions">
+    <button
+      mat-raised-button
+      class="btn-primary"
+      type="button"
+      [disabled]="testingConsulta()"
+      (click)="probarConsulta()"
+    >
+      {{ testingConsulta() ? 'Probando...' : 'Probar consulta' }}
+    </button>
+    <button
+      mat-stroked-button
+      type="button"
+      *ngIf="showPago"
+      [disabled]="!canPagar() || testingPago()"
+      (click)="probarPago()"
+    >
+      {{ testingPago() ? 'Probando...' : 'Probar pago' }}
+    </button>
+  </div>
+
+  <!-- Resultado de consulta -->
+  <ng-container *ngIf="state.consultaTest() as consulta">
+    <section class="result-card">
+      <div class="result-card__header">
+        <h3>Resultado canónico de la consulta</h3>
+        <span class="badge" [class.badge--ok]="consulta.status === 'OK'" [class.badge--warn]="consulta.status !== 'OK'">
+          {{ consulta.status }} · Hub {{ consulta.homologatedCode }}
+        </span>
+      </div>
+      <p class="result-card__meta">Titular: {{ consulta.payerNameMasked || '—' }}</p>
+
+      <table class="result-table" *ngIf="consulta.obligations.length; else noDebtTpl" aria-label="Obligaciones">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Vencimiento</th>
+            <th>Monto</th>
+            <th>Moneda</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let o of consulta.obligations">
+            <td>{{ o.obligationId }}</td>
+            <td>{{ o.dueDate || '—' }}</td>
+            <td>{{ o.totalAmount }}</td>
+            <td>{{ o.currency }}</td>
+            <td>{{ o.description || '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #noDebtTpl>
+        <p class="no-debt">Sin obligaciones (NO_DEBT). No se puede activar.</p>
+      </ng-template>
+
+      <app-trace-panel [entries]="consulta.trace" [correlationId]="consulta.correlationId"></app-trace-panel>
+    </section>
+  </ng-container>
+
+  <!-- Resultado de pago -->
+  <ng-container *ngIf="state.pagoTest() as pago">
+    <section class="result-card">
+      <div class="result-card__header">
+        <h3>Request de pago construido por el Hub</h3>
+        <span class="badge" [class.badge--ok]="pago.status === 'OK'" [class.badge--error]="pago.status !== 'OK'">
+          {{ pago.status }} · Hub {{ pago.homologatedCode }}
+        </span>
+      </div>
+
+      <table class="result-table" aria-label="Request de pago">
+        <thead>
+          <tr>
+            <th>Campo del proveedor</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of builtRequestEntries()">
+            <td><code>{{ e.key }}</code></td>
+            <td>{{ e.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="receipt" *ngIf="pago.receipt as r">
+        Recibo: {{ r.reference }} · {{ r.amount }} {{ r.currency }} · {{ r.timestamp | date: 'short' }}
+      </p>
+
+      <app-trace-panel [entries]="pago.trace" [correlationId]="pago.correlationId"></app-trace-panel>
+    </section>
+  </ng-container>
+
+  <div class="activate-row">
+    <button
+      mat-raised-button
+      class="btn-activate"
+      type="button"
+      [disabled]="!canActivate() || activating()"
+      (click)="activar()"
+    >
+      {{ activating() ? 'Activando...' : 'Activar proveedor' }}
+    </button>
+    <span class="activate-hint" *ngIf="!canActivate()">
+      Ejecuta una consulta que devuelva obligaciones para habilitar la activación.
+    </span>
+  </div>
+</div>

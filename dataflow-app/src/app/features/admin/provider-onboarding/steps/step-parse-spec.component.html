@@ -1,0 +1,78 @@
+<div class="parse-step">
+  <h2 class="step-title">Cargar el estándar de API</h2>
+  <p class="step-hint">
+    Pega el contrato o un ejemplo del proveedor ({{ protocol }}). El sistema lo analiza y detiene el
+    flujo para que verifiques manualmente los campos detectados antes de continuar.
+  </p>
+
+  <div class="toolbar">
+    <button mat-stroked-button type="button" (click)="loadDemo()">Cargar ejemplo demo</button>
+    <button
+      mat-raised-button
+      class="btn-primary"
+      type="button"
+      [disabled]="!state.rawSpec().trim() || analyzing()"
+      (click)="analyze()"
+    >
+      {{ analyzing() ? 'Analizando...' : 'Analizar' }}
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="spec-field">
+    <mat-label>Estándar / ejemplo del proveedor</mat-label>
+    <textarea
+      matInput
+      rows="12"
+      [ngModel]="state.rawSpec()"
+      (ngModelChange)="onSpecChange($event)"
+      placeholder="Pega aquí el JSON, XML/WSDL o la tabla de campos..."
+      aria-label="Estándar o ejemplo del proveedor"
+    ></textarea>
+  </mat-form-field>
+
+  <div class="alert alert--error" role="alert" *ngIf="error()">
+    {{ error() }}
+  </div>
+
+  <ng-container *ngIf="state.parseResult() as result">
+    <div class="review-panel">
+      <h3 class="review-title">
+        Campos detectados ({{ result.meta.detectedCount }}) · {{ result.meta.obligationCount }} obligación(es)
+      </h3>
+
+      <div class="alert alert--warn" role="status" *ngFor="let w of result.meta.warnings">
+        {{ w }}
+      </div>
+
+      <div class="table-wrap">
+        <table class="fields-table" aria-label="Campos detectados">
+          <thead>
+            <tr>
+              <th>Ruta</th>
+              <th>Etiqueta</th>
+              <th>Ejemplo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let f of result.fields">
+              <td><code>{{ f.path }}</code></td>
+              <td>{{ f.label }}</td>
+              <td class="sample">{{ f.sample }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <mat-checkbox
+        class="confirm-box"
+        [checked]="state.fieldsConfirmed()"
+        (change)="toggleConfirmed($event.checked)"
+      >
+        Confirmo que los campos detectados son correctos
+      </mat-checkbox>
+      <p class="confirm-hint" *ngIf="!state.fieldsConfirmed()">
+        Debes confirmar los campos para habilitar el siguiente paso.
+      </p>
+    </div>
+  </ng-container>
+</div>

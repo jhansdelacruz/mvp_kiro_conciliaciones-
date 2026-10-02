@@ -1,0 +1,75 @@
+<div class="code-step">
+  <h2 class="step-title">Homologar códigos de respuesta</h2>
+  <p class="step-hint">
+    Mapea los códigos del proveedor al catálogo único del Hub. Cualquier código sin homologar se
+    resuelve a <code>99</code> en tiempo de ejecución.
+  </p>
+
+  <div class="alert alert--warn" role="status" *ngIf="unmappedCount() > 0">
+    {{ unmappedCount() }} código(s) sin homologar → se resolverán a 99.
+  </div>
+
+  <div class="table-wrap">
+    <table class="code-table" aria-label="Homologación de códigos">
+      <thead>
+        <tr>
+          <th>Código del proveedor</th>
+          <th>Descripción</th>
+          <th>Código del Hub</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of state.codeMap(); let i = index">
+          <td>
+            <mat-form-field appearance="outline" class="cell-field">
+              <input
+                matInput
+                [value]="row.providerCode"
+                (input)="updateField(i, 'providerCode', $any($event.target).value)"
+                [readonly]="row.isDefault"
+                aria-label="Código del proveedor"
+              />
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline" class="cell-field">
+              <input
+                matInput
+                [value]="row.providerLabel"
+                (input)="updateField(i, 'providerLabel', $any($event.target).value)"
+                aria-label="Descripción del código"
+              />
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline" class="cell-field">
+              <mat-select
+                [value]="row.hubCode"
+                (selectionChange)="updateHubCode(i, $event.value)"
+                aria-label="Código del Hub"
+              >
+                <mat-option *ngFor="let hc of state.hubCodes()" [value]="hc.code">
+                  {{ hc.code }} · {{ hc.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <button
+              mat-button
+              color="warn"
+              *ngIf="!row.isDefault"
+              (click)="removeCode(i)"
+              [attr.aria-label]="'Eliminar código ' + row.providerCode"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button mat-stroked-button type="button" class="add-btn" (click)="addCode()">+ Agregar código</button>
+</div>

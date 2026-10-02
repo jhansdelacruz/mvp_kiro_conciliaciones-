@@ -1,0 +1,81 @@
+<div class="match-step">
+  <h2 class="step-title">Match visual de campos</h2>
+  <p class="step-hint">
+    Haz clic en un campo canónico y luego en el campo del proveedor para enlazarlos. Vuelve a hacer
+    clic en un campo canónico enlazado para quitar el enlace.
+  </p>
+
+  <div class="match-actions">
+    <button mat-stroked-button type="button" (click)="suggest()">Sugerir enlaces</button>
+  </div>
+
+  <div class="alert alert--warn" role="status" *ngIf="unlinkedRequired().length">
+    Campos obligatorios sin enlazar: {{ unlinkedRequired().join(', ') }}.
+  </div>
+  <div class="alert alert--ok" role="status" *ngIf="!unlinkedRequired().length">
+    Todos los campos obligatorios están enlazados.
+  </div>
+
+  <mat-tab-group (selectedIndexChange)="onTabChange($event)" animationDuration="0ms">
+    <mat-tab label="Consulta de deuda (SRV-01)">
+      <div class="tab-body">
+        <app-field-match-canvas
+          [canonicalFields]="state.canonicalFields()"
+          [providerFields]="providerFields()"
+          [links]="consultaLinks()"
+          (link)="onLink('CONSULTA', $event)"
+          (unlink)="onUnlink('CONSULTA', $event)"
+        ></app-field-match-canvas>
+
+        <div class="transforms" *ngIf="consultaLinks().length">
+          <h4 class="transforms__title">Transformaciones de entrada</h4>
+          <div class="transform-row" *ngFor="let l of consultaLinks()">
+            <span class="transform-row__label">{{ l.canonicalPath }}</span>
+            <mat-form-field appearance="outline" class="transform-row__select">
+              <mat-label>Transformación</mat-label>
+              <mat-select
+                [value]="l.transformation"
+                (selectionChange)="onTransformChange('CONSULTA', l.canonicalPath, $event.value)"
+              >
+                <mat-option *ngFor="let t of transformOptions" [value]="t.id">{{ t.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Pago (SRV-02)" *ngIf="showPago">
+      <div class="tab-body">
+        <app-field-match-canvas
+          [canonicalFields]="state.paymentFields()"
+          [providerFields]="providerFields()"
+          [links]="pagoLinks()"
+          (link)="onLink('PAGO', $event)"
+          (unlink)="onUnlink('PAGO', $event)"
+        ></app-field-match-canvas>
+
+        <p class="hub-note">
+          El valor de <code>hubTransactionId</code> lo genera el Hub en tiempo de ejecución; si lo
+          enlazas, aparecerá en el request de pago construido. Si no lo enlazas, simplemente se omite.
+        </p>
+
+        <div class="transforms" *ngIf="pagoLinks().length">
+          <h4 class="transforms__title">Transformaciones de salida</h4>
+          <div class="transform-row" *ngFor="let l of pagoLinks()">
+            <span class="transform-row__label">{{ l.canonicalPath }}</span>
+            <mat-form-field appearance="outline" class="transform-row__select">
+              <mat-label>Transformación</mat-label>
+              <mat-select
+                [value]="l.transformation"
+                (selectionChange)="onTransformChange('PAGO', l.canonicalPath, $event.value)"
+              >
+                <mat-option *ngFor="let t of transformOptions" [value]="t.id">{{ t.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -1,0 +1,139 @@
+.step-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+
+.step-hint {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0 0 16px;
+}
+
+.toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  background: #f59e0b;
+  color: #0f172a;
+}
+
+.result-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+  }
+
+  &__meta {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin: 0 0 12px;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+
+  &--ok {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  &--warn {
+    background: #fef3c7;
+    color: #b45309;
+  }
+
+  &--error {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin-bottom: 12px;
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  th {
+    color: #475569;
+    font-weight: 600;
+  }
+
+  code {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    color: #0f172a;
+  }
+}
+
+.no-debt {
+  font-size: 0.85rem;
+  color: #b45309;
+  margin: 0 0 12px;
+}
+
+.receipt {
+  font-size: 0.8rem;
+  color: #047857;
+  margin: 0 0 12px;
+}
+
+.activate-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.btn-activate {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.activate-hint {
+  font-size: 0.78rem;
+  color: #64748b;
+}

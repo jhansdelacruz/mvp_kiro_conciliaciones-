@@ -1,0 +1,91 @@
+<div class="wizard">
+  <div class="wizard__header">
+    <div>
+      <h1 class="wizard__title">{{ title() }}</h1>
+      <p class="wizard__subtitle">Registra un proveedor como configuración, sin desarrollar código.</p>
+    </div>
+    <button mat-stroked-button type="button" (click)="volverAlCatalogo()">Volver al catálogo</button>
+  </div>
+
+  <!-- Estado "no encontrado" al reabrir un id inexistente -->
+  <div class="not-found" *ngIf="notFound(); else wizardTpl" role="alert">
+    <p class="not-found__text">Proveedor no encontrado.</p>
+    <button mat-raised-button class="btn-accent" type="button" (click)="volverAlCatalogo()">
+      Volver al catálogo
+    </button>
+  </div>
+
+  <ng-template #wizardTpl>
+    <mat-stepper linear #stepper class="wizard__stepper">
+      <mat-step [completed]="state.step1Valid()" [editable]="true" label="Datos del proveedor">
+        <app-step-provider-data></app-step-provider-data>
+        <div class="wizard-nav">
+          <button
+            mat-raised-button
+            class="btn-accent"
+            type="button"
+            [disabled]="!state.step1Valid()"
+            (click)="stepper.next()"
+          >
+            Siguiente
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="state.step2Valid()" [editable]="true" label="Cargar estándar">
+        <app-step-parse-spec></app-step-parse-spec>
+        <div class="wizard-nav">
+          <button mat-button type="button" (click)="stepper.previous()">Anterior</button>
+          <button
+            mat-raised-button
+            class="btn-accent"
+            type="button"
+            [disabled]="!state.step2Valid()"
+            (click)="stepper.next()"
+          >
+            Siguiente
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="state.step3Valid()" [editable]="true" label="Match de campos">
+        <app-step-field-match></app-step-field-match>
+        <div class="wizard-nav">
+          <button mat-button type="button" (click)="stepper.previous()">Anterior</button>
+          <button
+            mat-raised-button
+            class="btn-accent"
+            type="button"
+            [disabled]="!state.step3Valid()"
+            (click)="stepper.next()"
+          >
+            Siguiente
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="state.step4Valid()" [editable]="true" label="Homologar códigos">
+        <app-step-code-map></app-step-code-map>
+        <div class="wizard-nav">
+          <button mat-button type="button" (click)="stepper.previous()">Anterior</button>
+          <button
+            mat-raised-button
+            class="btn-accent"
+            type="button"
+            [disabled]="!state.step4Valid()"
+            (click)="stepper.next()"
+          >
+            Siguiente
+          </button>
+        </div>
+      </mat-step>
+
+      <mat-step [completed]="state.step5Valid()" [editable]="true" label="Probar y activar">
+        <app-step-test-activate></app-step-test-activate>
+        <div class="wizard-nav">
+          <button mat-button type="button" (click)="stepper.previous()">Anterior</button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </ng-template>
+</div>

@@ -1,0 +1,111 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+// El acento ámbar puede vivir en el SCSS de este componente (design.md §10).
+.btn-accent {
+  color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.provider-block {
+  margin-bottom: 28px;
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #334155;
+    margin: 0 0 12px;
+  }
+}
+
+.provider-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.provider-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+
+    strong {
+      color: #0f172a;
+      font-size: 0.95rem;
+    }
+  }
+
+  &__meta {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin: 6px 0 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 4px;
+    margin-top: 10px;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &--ref {
+    background: #e2e8f0;
+    color: #475569;
+  }
+
+  &--dyn {
+    background: #fef3c7;
+    color: #b45309;
+  }
+}
+
+.empty-dyn {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 48px;
+  color: #64748b;
+  font-size: 0.9rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}

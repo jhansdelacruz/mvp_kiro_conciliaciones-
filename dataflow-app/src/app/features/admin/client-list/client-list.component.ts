@@ -69,6 +69,10 @@ export class ClientListComponent implements OnInit {
     this.router.navigate(['/admin/clients/new']);
   }
 
+  navigateToNewProvider(): void {
+    this.router.navigate(['/admin/providers/new']);
+  }
+
   editClient(id: string): void {
     this.router.navigate(['/admin/clients', id]);
   }

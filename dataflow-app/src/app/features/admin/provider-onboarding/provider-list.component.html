@@ -1,0 +1,48 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Catálogo de proveedores</h1>
+    <p class="page-subtitle">Proveedores de referencia y proveedores dados de alta por el asistente</p>
+  </div>
+  <button mat-stroked-button class="btn-accent" (click)="navigateToNewProvider()">
+    + Nuevo proveedor
+  </button>
+</div>
+
+<ng-container *ngIf="!loading(); else loadingTpl">
+  <section class="provider-block">
+    <h2 class="provider-block__title">Referencia</h2>
+    <div class="provider-grid">
+      <article class="provider-card" *ngFor="let p of estaticos()">
+        <div class="provider-card__head">
+          <strong>{{ p.name }}</strong>
+          <span class="badge badge--ref">Referencia</span>
+        </div>
+        <p class="provider-card__meta">{{ p.protocol }} · {{ p.status }}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="provider-block">
+    <h2 class="provider-block__title">Dinámico</h2>
+    <div class="provider-grid" *ngIf="dinamicos().length; else emptyTpl">
+      <article class="provider-card" *ngFor="let p of dinamicos()">
+        <div class="provider-card__head">
+          <strong>{{ p.name }}</strong>
+          <span class="badge badge--dyn">Dinámico</span>
+        </div>
+        <p class="provider-card__meta">{{ p.protocol }} · {{ p.status }}</p>
+        <div class="provider-card__actions">
+          <button mat-button color="primary" (click)="openProvider(p.providerId)">Reabrir</button>
+          <button mat-button color="warn" (click)="deleteProvider(p)">Eliminar</button>
+        </div>
+      </article>
+    </div>
+    <ng-template #emptyTpl>
+      <p class="empty-dyn">Aún no hay proveedores dinámicos. Usa "+ Nuevo proveedor" para dar de alta uno.</p>
+    </ng-template>
+  </section>
+</ng-container>
+
+<ng-template #loadingTpl>
+  <div class="loading-state" role="status" aria-label="Cargando proveedores">Cargando proveedores...</div>
+</ng-template>

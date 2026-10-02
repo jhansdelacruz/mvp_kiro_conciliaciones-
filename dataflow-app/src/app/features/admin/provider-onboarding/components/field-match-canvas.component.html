@@ -1,0 +1,52 @@
+<div class="match-wrap">
+  <div class="match-grid">
+    <div class="match-col">
+      <h4 class="match-col__title">Modelo canónico del Hub</h4>
+      <ul class="match-col__list">
+        <li *ngFor="let c of canonicalFields()">
+          <app-field-node
+            side="canonical"
+            [path]="c.path"
+            [label]="c.label"
+            [required]="c.required"
+            [selected]="selectedCanonical() === c.path"
+            [linked]="isCanonicalLinked(c.path)"
+            [linkedTo]="linkedProviderFor(c.path)"
+            (activate)="onCanonicalActivate($event)"
+          ></app-field-node>
+        </li>
+      </ul>
+    </div>
+
+    <div class="match-col">
+      <h4 class="match-col__title">Campos del proveedor</h4>
+      <ul class="match-col__list" *ngIf="providerFields().length; else noFields">
+        <li *ngFor="let p of providerFields()">
+          <app-field-node
+            side="provider"
+            [path]="p.path"
+            [label]="p.label"
+            [sample]="p.sample"
+            [linked]="isProviderLinked(p.path)"
+            (activate)="onProviderActivate($event)"
+          ></app-field-node>
+        </li>
+      </ul>
+      <ng-template #noFields>
+        <p class="match-empty">Analiza el estándar en el Paso 2 para ver los campos del proveedor.</p>
+      </ng-template>
+    </div>
+
+    <svg #svg class="match-overlay" aria-hidden="true">
+      <path *ngFor="let line of lines()" [attr.d]="line.d" class="match-line" />
+    </svg>
+  </div>
+
+  <!-- Lista accesible de enlaces (no depende del dibujo SVG) -->
+  <div class="match-links" role="list" aria-label="Enlaces definidos">
+    <p class="match-links__empty" *ngIf="!linkDescriptions().length">Sin enlaces aún.</p>
+    <p class="match-links__item" role="listitem" *ngFor="let d of linkDescriptions()">
+      {{ d.canonical }} → {{ d.provider }}
+    </p>
+  </div>
+</div>

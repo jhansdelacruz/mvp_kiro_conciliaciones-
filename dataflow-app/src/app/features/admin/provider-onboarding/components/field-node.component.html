@@ -1,0 +1,19 @@
+<div
+  class="field-node"
+  [class.field-node--selected]="selected"
+  [class.field-node--linked]="linked"
+  [class.field-node--provider]="side === 'provider'"
+  role="button"
+  tabindex="0"
+  [attr.aria-pressed]="selected"
+  [attr.aria-label]="ariaLabel"
+  (click)="onActivate()"
+  (keydown)="onKeydown($event)"
+>
+  <span class="field-node__label">
+    {{ label }}
+    <span class="field-node__required" *ngIf="required" aria-hidden="true">*</span>
+  </span>
+  <span class="field-node__path">{{ path }}</span>
+  <span class="field-node__sample" *ngIf="sample">ej.: {{ sample }}</span>
+</div>

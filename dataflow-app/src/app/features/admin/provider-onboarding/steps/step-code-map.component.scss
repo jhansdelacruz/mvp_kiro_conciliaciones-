@@ -1,0 +1,63 @@
+.step-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+
+.step-hint {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0 0 12px;
+
+  code {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    color: #0f172a;
+  }
+}
+
+.alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  margin-bottom: 12px;
+
+  &--warn {
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+  }
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+.code-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+    padding: 4px 12px 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  td {
+    padding: 0 12px;
+    vertical-align: top;
+  }
+}
+
+.cell-field {
+  width: 100%;
+  min-width: 160px;
+}
+
+.add-btn {
+  margin-top: 8px;
+}
