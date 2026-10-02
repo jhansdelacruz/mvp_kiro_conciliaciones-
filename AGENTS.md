@@ -98,8 +98,9 @@ no requiera tocar componentes.
 ```typescript
 export const environment = {
   production: false,
-  useMock: true, // ← único switch mock ↔ producción
-  apiUrl: 'https://REPLACE_ME.execute-api.us-east-1.amazonaws.com/dev',
+  useMock: true, // ← servicios de datos + bypass del interceptor
+  authMode: 'mock' as 'mock' | 'local' | 'cognito', // ← qué IAuthService inyecta el factory
+  apiUrl: 'http://localhost:4566/restapis/REPLACE_API_ID/local/_user_request_',
   cognito: {
     userPoolId: 'us-east-1_REPLACE_ME',
     userPoolClientId: 'REPLACE_ME',
@@ -108,20 +109,37 @@ export const environment = {
 };
 ```
 
+`useMock` controla los servicios de datos (`ClientService`, `ProcessHistoryService`)
+y el bypass del interceptor; `authMode` controla **qué `IAuthService`** inyecta el
+factory. El default de `environment.ts`/`environment.development.ts` es
+`useMock: true` + `authMode: 'mock'` (modo mock intacto).
+
 ### Inyección condicional
 
-`app.config.ts` resuelve el servicio de auth con un factory según la bandera:
+`app.config.ts` resuelve el servicio de auth con un factory según `authMode`:
 
 ```typescript
 {
   provide: AUTH_SERVICE,
-  useFactory: () =>
-    environment.useMock ? new MockAuthService() : new AuthService()
+  useFactory: () => {
+    switch (environment.authMode) {
+      case 'local':   return new LocalAuthService();   // backend Floci local
+      case 'cognito': return new AuthService();         // Amplify real
+      default:        return new MockAuthService();     // mock (default)
+    }
+  }
 }
 ```
 
-- `useMock: true`  → `MockAuthService` (credenciales en memoria, delay ~800 ms).
-- `useMock: false` → `AuthService` real con Amplify v6.
+- `authMode: 'mock'`    → `MockAuthService` (credenciales en memoria, delay ~800 ms).
+- `authMode: 'local'`   → `LocalAuthService` (POST `{apiUrl}/auth/login` al backend
+  Floci local; `getJwtToken()` devuelve el `idToken`; el 401 se mapea a
+  "Credenciales incorrectas"). Requiere `useMock: false`.
+- `authMode: 'cognito'` → `AuthService` real con Amplify v6. Requiere `useMock: false`.
+
+El interceptor solo adjunta `Authorization: Bearer <idToken>` a peticiones cuya URL
+empieza por `environment.apiUrl`; así las presigned URLs a S3 (`:4566/dataflow-input-local/...`)
+viajan sin cabecera `Authorization`.
 
 Los componentes **siempre** inyectan el token `AUTH_SERVICE`, nunca una clase
 concreta. Por eso el cambio a producción no toca componentes.
@@ -287,7 +305,29 @@ Estructura: `{clientId}/{processId}/<archivo>`.
 
 ---
 
-## 10. Cómo pasar a AWS real
+## 10. Cómo pasar a backend local (Floci) o a AWS real
+
+### Backend local con Floci (`authMode: 'local'`)
+
+1. Levantar el backend: `cd backend && make start` (Docker Compose + `provision.mjs`
+   idempotente). Al terminar escribe `backend/.floci/outputs.json`.
+2. Copiar de `outputs.json` a `environment.development.ts` (y/o `environment.ts`):
+   `invokeUrl` → `apiUrl`, `userPoolId` → `cognito.userPoolId`,
+   `appClientId` → `cognito.userPoolClientId`.
+3. Poner `useMock: false` y `authMode: 'local'`.
+4. `cd dataflow-app && npx ng serve`. El login llamará a `POST {apiUrl}/auth/login`;
+   los servicios de datos usarán el API local.
+
+   > El dashboard del cliente sigue llamando a `getHistory('current-user-id')` y
+   > **no se modifica** (`dashboard.component.ts` queda fuera del cambio acotado):
+   > funciona porque el handler `/processes` ignora ese query param para el rol
+   > `client` y deriva el `clientId` del claim `custom:clientId` del id token
+   > (`cliente@empresa.com` → `client-001`), poblando el historial igual que en mock.
+
+   Credenciales de prueba (idénticas al mock): `admin@dataflow.com` / `Admin123!`
+   y `cliente@empresa.com` / `Cliente123!`.
+
+### AWS real (`authMode: 'cognito'`)
 
 1. Crear el **Cognito User Pool** con grupos `admin` y `client`, y un App Client
    con flujo `USER_PASSWORD_AUTH`.
@@ -295,6 +335,7 @@ Estructura: `{clientId}/{processId}/<archivo>`.
 3. En `environment.development.ts` y `environment.prod.ts`:
    ```typescript
    useMock: false,
+   authMode: 'cognito',
    apiUrl: 'https://TU_API.execute-api.us-east-1.amazonaws.com/prod',
    cognito: {
      userPoolId: 'us-east-1_TU_POOL_ID',
